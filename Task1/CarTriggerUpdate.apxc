@@ -1,0 +1,30 @@
+public class CarTriggerUpdate {
+   public static void updateOwners (List<Car__c> cars) {
+        Set<Id> OwnewIdies = getOwnewId(cars);
+        Map<Id, Car_Owner__c> owners = querryOwners(OwnewIdies);
+        executeUpdate(owners);
+    }
+    private static Set<Id> getOwnewId(List<Car__c> cars) {
+        Set<Id> result = new Set<Id>();
+        for(Car__c curCar : cars) {
+           if(curCar.Car_Owner__c != null) {
+              result.add(curCar.Car_Owner__c);
+            }
+        }
+        return result;
+    }
+    private static Map<Id, Car_Owner__c> querryOwners(Set<Id> idies) {
+        return new Map<Id, Car_Owner__c>([select Id, 	TimeUp__c from Car_Owner__c where Id in : idies]);
+    }
+    private static void executeUpdate(Map<Id, Car_Owner__c> owners) {
+        List<Car_Owner__c> OwnersUpdate = new List<Car_Owner__c>();
+        for (Id OwnerIds : owners.keySet()) {
+        	Car_Owner__c CurrentOwners = owners.get(OwnerIds);
+        	CurrentOwners.TimeUp__c = DateTime.now();
+            OwnersUpdate.add(CurrentOwners);
+       	 }
+        if(OwnersUpdate.size() != 0) {
+            update OwnersUpdate;
+        }
+    }
+}

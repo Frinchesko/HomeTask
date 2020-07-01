@@ -1,0 +1,3 @@
+trigger CarTrigUpCH on Car__c (before update) {
+CarTriggerUpdate.updateOwners(Trigger.new);
+}
