@@ -1,0 +1,14 @@
+global class AddLeadBatch implements Database.BatchablesObject {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+ return Database.getQueryLocator('SELECT ID,Email,Name,Phone,Domain__c FROM Lead');
+    }
+    global void execute(Database.BatchableContext bc, ListLead recdom){
+         for(Lead lead  recdom){
+            lead.Domain__c = record.Email.split('@');
+        }
+        update recdom;
+    }    
+    global void finish(Database.BatchableContext bc){
+         System.debug('Leads have been updated');
+    }    
+}

@@ -1,0 +1,33 @@
+@RestResource(urlMapping='/Animals/*')
+global without sharing class AnimalManager{
+    @HttpGet
+    global static Animals__c getAnimalById(){
+        RestRequest request = RestContext.request;
+        Integer ids = Integer.valueOf(request.requestURI.substring(
+        	request.requestURI.lastIndexOf('/')+1));
+        Animals__c result = [SELECT Animal_ID__c, Animal_Name__c,	eats__c,Says__c
+                             FROM Animals__c
+                             WHERE Animal_ID__c = :ids LIMIT 1];
+        RestContext.response.addHeader('Content-Type', 'application/json');
+        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(result));
+        return result;
+    }
+    
+    @HttpPost
+    global static void animalUpdatePost( String name,String says,String eats,Decimal animalid ) {
+        String reqBody = RestContext.request.requestBody.toString();
+        RestRequest request = RestContext.request;
+            if(String.isNotBlank(reqBody)) {
+            Integer ids = Integer.valueOf(request.requestURI.substring(
+                request.requestURI.lastIndexOf('/')+1));
+            Animals__c animal = [SELECT Animal_ID__c, Animal_Name__c,	eats__c,Says__c
+                                    FROM AnimalS__c
+                                    WHERE Animal_ID__c = :ids LIMIT 1];
+            
+            Animals__c thisAnimal = new Animals__c(Animal_ID__c=animalid,Animal_Name__c=name,
+            eats__c = eats,Says__c=says);
+            update animal;
+           
+    }
+        }
+    }
