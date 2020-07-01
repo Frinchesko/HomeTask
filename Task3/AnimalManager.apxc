@@ -24,8 +24,8 @@ global without sharing class AnimalManager{
                                     FROM AnimalS__c
                                     WHERE Animal_ID__c = :ids];
             AnimalV resanim = (AnimalV)JSON.deserialize(request.requestBody.tostring(),AnimalV.class);
-            animal.Heroku_ID__c = resanim.id;    
-            animal.Description__c = resanim.name;
+            animal.Animal_ID__c = resanim.id;    
+            animal.Animal_Name__c = resanim.name;
             animal.Eats__c = resanim.eats;
             animal.Says__c = resanim.says;
            
