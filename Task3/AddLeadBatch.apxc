@@ -9,6 +9,6 @@ global class AddLeadBatch implements Database.BatchablesObject {
         update recdom;
     }    
     global void finish(Database.BatchableContext bc){
-         System.debug('Leads have been updated');
+         System.debug(' updated');
     }    
 }
