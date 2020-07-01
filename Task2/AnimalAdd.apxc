@@ -1,0 +1,28 @@
+global class AnimalAdd {
+@future(callout=true)
+    public static void GetAnimal (Set<Id> animalPackIds){
+        List<Animals__c> animalCollection = [Select Animal_ID__c, Animal_Name__c,	eats__c,Says__c from Animals__c Where Id IN :animalPackIds];
+        List<AnimalV> animals = new List<AnimalV>();
+        List<Animals__c> AnimalUp = new List<Animals__c>();
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        for(Animals__c animal: animalCollection) {
+            request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals/' + animal.Animal_ID__c);
+            request.setMethod('GET');
+            HttpResponse response = http.send(request);
+            if (response.getStatusCode() == 200) {
+                Map<String, AnimalV> resultedAnimalMap = (Map<String, AnimalV>)JSON.deserialize(response.getBody(),Map<String, AnimalV>.class);
+                AnimalV animalItem = resultedAnimalMap.get('animal');
+                animals.add(animalItem);
+             }
+        for(AnimalV anMod: animals){
+                if(animal.Animal_ID__c == anMod.id){
+                    animal.Animal_Name__c = anMod.name;
+                    animal.eats__c = anMod.eats;
+                    animal.Says__c = anMod.says;
+                    AnimalUp.add(animal);}
+        }
+        } 
+            update AnimalUp;
+    }
+}

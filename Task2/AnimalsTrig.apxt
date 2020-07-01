@@ -1,0 +1,3 @@
+trigger AnimalsTrig on Animals__c (after insert) {
+AnimalAdd.GetAnimal(Trigger.newMap.keySet());
+}
